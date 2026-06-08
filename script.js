@@ -156,11 +156,20 @@ async function sendMessage() {
             let errorMsg = "Something went wrong on the server.";
             try {
                 const parsedReply = JSON.parse(data.reply);
-                if (parsedReply.error) errorMsg = parsedReply.error;
+                if (parsedReply.error) {
+                    if (typeof parsedReply.error === 'object' && parsedReply.error.message) {
+                        errorMsg = parsedReply.error.message;
+                    } else if (typeof parsedReply.error === 'string') {
+                        errorMsg = parsedReply.error;
+                    }
+                }
             } catch(e) {}
             
-            if (response.status === 500 && (errorMsg.includes("demand") || errorMsg.includes("UNAVAILABLE") || errorMsg.includes("busy"))) {
+            const lowerError = errorMsg.toLowerCase();
+            if (response.status === 500 && (lowerError.includes("demand") || lowerError.includes("unavailable") || lowerError.includes("busy"))) {
                 botDiv.innerHTML = "⚠️ <strong>Travel Buddy is busy:</strong> The Gemini AI model is currently experiencing high demand. Please wait a moment and try again!";
+            } else if (lowerError.includes("internal error") || lowerError.includes("internal") || response.status === 500) {
+                botDiv.innerHTML = "⚠️ <strong>Gemini API Temporary Error:</strong> Google's AI server experienced a temporary internal glitch. Please click <strong>Send</strong> again to retry!";
             } else {
                 botDiv.innerHTML = `❌ <strong>Error:</strong> ${errorMsg}`;
             }
