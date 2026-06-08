@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Buddy - Your AI Travel Companion</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Outfits Google Font (Premium clean typography) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Beautiful Tropical Background Sky Path -->
+    <div class="decorations">
+        <!-- SVG dashed paper airplane path -->
+        <svg class="flight-path" width="400" height="200" viewBox="0 0 400 200" fill="none">
+            <path d="M10,80 Q100,20 200,80 T380,30" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-dasharray="6,6"/>
+            <text x="375" y="25" fill="white" font-size="20">✈️</text>
+        </svg>
+    </div>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>
+                    <span class="logo-plane">✈️</span>
+                    <span class="logo-text-blue">Travel</span> <span class="logo-text-red">Buddy</span>
+                </h2>
+                <p>Your AI Travel Companion <span>✦</span></p>
+            </div>
+
+            <div class="menu">
+                <div class="menu-item active" id="menuHome">
+                    <span class="menu-icon">🏠</span> Home
+                </div>
+                <div class="menu-item" id="menuTrips">
+                    <span class="menu-icon">✈️</span> My Trips
+                </div>
+                <div class="menu-item" id="menuFavorites">
+                    <span class="menu-icon">❤️</span> Favorites
+                </div>
+                <div class="menu-item" id="menuBudget">
+                    <span class="menu-icon">💰</span> Budget Planner
+                </div>
+                <div class="menu-item" id="menuInspiration">
+                    <span class="menu-icon">📸</span> Travel Inspiration
+                </div>
+                <div class="menu-item" id="menuSettings">
+                    <span class="menu-icon">⚙️</span> Settings
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="pin-icon">📍</div>
+                <h3>Let's explore the world!</h3>
+                <p>
+                    Pack your bags, chase dreams, and collect memories. ✈️ 🗺️
+                </p>
+                <div class="promo-img-container">
+                    <img src="assets/suitcase_illustration.png" alt="Travel Illustration" class="suitcase-img">
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <!-- Header Row -->
+            <div class="header-row">
+                <div class="hero">
+                    <h1 id="greetingHeader">Hey Explorer! 👋</h1>
+                    <p>Where do you want to go next?</p>
+                </div>
+
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggleBtn">
+                        <span class="toggle-icon">🌙</span> Dark Mode
+                    </button>
+                    <div class="profile-container">
+                        <img src="assets/user_avatar.png" alt="Profile" class="profile-pic">
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOME VIEW -->
+            <div class="view-panel active-view" id="viewHome">
+                <!-- Chat Area -->
+                <div class="chat-container-wrapper">
+                    <div class="chat-box" id="chatBox">
+                        <!-- Default Bot Greeting -->
+                        <div class="message-wrapper bot-wrapper">
+                            <img src="assets/bot_avatar.png" alt="Bot Avatar" class="message-avatar">
+                            <div class="bot-message">
+                                👋 Hi! I'm Travel Buddy.
+                                <br><br>
+                                Tell me your budget, days, and travel preferences (e.g., "I have 3 days and ₹9000 budget. I want to visit Munnar. I love nature and photography."). I'll plan the perfect trip for you!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <span class="plane-input-icon">✈️</span>
+                        <input type="text" id="userInput" placeholder="Ask me about any destination, budget or travel plan...">
+                        <button class="attachment-btn">📎</button>
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                            <span class="send-icon">✈️</span> Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAVORITES VIEW -->
+            <div class="view-panel" id="viewFavorites">
+                <div class="favorites-container-wrapper">
+                    <div class="favorites-container">
+                        <div class="favorites-header">
+                            <h3>❤️ Your Saved Favorites</h3>
+                            <p>Manage and browse your liked destinations, photography spots, food recommendations, and travel tips.</p>
+                        </div>
+                        
+                        <div class="favorites-categories">
+                            <!-- Destinations Section -->
+                            <div class="fav-section" id="favDestinationsSection">
+                                <h4>📍 Saved Destinations</h4>
+                                <div class="fav-grid" id="favDestinationsGrid">
+                                    <div class="no-favs-msg">No saved destinations yet. Click the heart icon (❤️) on travel plans to save them!</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Food Recommendations Section -->
+                            <div class="fav-section" id="favFoodSection">
+                                <h4>🍲 Food & Delicacies</h4>
+                                <div class="fav-grid" id="favFoodGrid">
+                                    <div class="no-favs-msg">No saved food items yet.</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Photography Spots Section -->
+                            <div class="fav-section" id="favSpotsSection">
+                                <h4>📸 Photography Spots</h4>
+                                <div class="fav-grid" id="favSpotsGrid">
+                                    <div class="no-favs-msg">No saved spots yet.</div>
+                                </div>
+                            </div>
+
+                            <!-- Travel Tips Section -->
+                            <div class="fav-section" id="favTipsSection">
+                                <h4>💡 Travel Tips</h4>
+                                <div class="fav-grid" id="favTipsGrid">
+                                    <div class="no-favs-msg">No saved tips yet.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MY TRIPS VIEW -->
+            <div class="view-panel" id="viewTrips">
+                <div class="trips-container-wrapper">
+                    <div class="trips-container">
+                        <div class="trips-header">
+                            <h3>✈️ Your Saved Trips</h3>
+                            <p>Browse, manage, and view details of your saved travel plans.</p>
+                        </div>
+                        
+                        <div class="trips-grid" id="tripsGrid">
+                            <div class="no-trips-msg">No saved trips yet. Click "Save Trip" (💾) on travel plans to save them!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BUDGET PLANNER VIEW -->
+            <div class="view-panel" id="viewBudget">
+                <div class="budget-container-wrapper">
+                    <div class="budget-container">
+                        <div class="budget-header">
+                            <h3>💰 Trip Budget Planner</h3>
+                            <p>Select a saved trip to analyze your travel budget breakdown and get optimization recommendations.</p>
+                        </div>
+                        
+                        <!-- Empty State (No trips saved yet) -->
+                        <div class="no-trips-msg" id="budgetEmptyState" style="display: none;">
+                            No planned trips yet. Click "Save Trip" (💾) on travel plans to start planning budgets!
+                        </div>
+                        
+                        <!-- Active Dashboard -->
+                        <div class="budget-dashboard" id="budgetDashboard">
+                            <div class="budget-selector-section">
+                                <label for="budgetTripSelect">Select Saved Trip:</label>
+                                <select id="budgetTripSelect" onchange="onBudgetTripChange()"></select>
+                            </div>
+                            
+                            <!-- Metrics Cards -->
+                            <div class="budget-metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-icon">💰</div>
+                                    <div class="metric-content">
+                                        <span class="metric-label">Total Budget</span>
+                                        <span class="metric-value" id="budgetTotalValue">-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">📅</div>
+                                    <div class="metric-content">
+                                        <span class="metric-label">Duration</span>
+                                        <span class="metric-value" id="budgetDurationValue">-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">💵</div>
+                                    <div class="metric-content">
+                                        <span class="metric-label">Daily Average</span>
+                                        <span class="metric-value" id="budgetDailyAvgValue">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Breakdown Details -->
+                            <div class="budget-breakdown-section">
+                                <div class="breakdown-chart-card">
+                                    <h4>📊 Expense Distribution</h4>
+                                    <div class="chart-bars-container" id="budgetChartBars">
+                                        <!-- Dynamic bars injected here -->
+                                    </div>
+                                </div>
+                                
+                                <div class="breakdown-advice-card">
+                                    <h4>💡 Smart Saving Tips</h4>
+                                    <div class="advice-content" id="budgetAdviceContent">
+                                        <!-- Recommendations injected here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRAVEL INSPIRATION VIEW -->
+            <div class="view-panel" id="viewInspiration">
+                <div class="inspiration-container-wrapper">
+                    <div class="inspiration-container">
+                        <div class="inspiration-header">
+                            <h3>📸 Travel Inspiration</h3>
+                            <p>Discover hand-curated getaways, trending landscapes, and kickstart your next adventure instantly.</p>
+                        </div>
+
+                        <!-- Seasonal Spotlight Banner -->
+                        <div class="inspiration-spotlight">
+                            <div class="spotlight-content">
+                                <div class="spotlight-badge">🔥 Seasonal Pick</div>
+                                <h2>Monsoon Tea Escapes in Munnar</h2>
+                                <p>Experience lush valleys, misty mountain ridges, and fresh rain showers in Kerala's legendary hill station.</p>
+                                <button class="btn-spotlight" onclick="triggerAiPlan('Munnar', 'focusing on tea plantations, mountain trekking, and monsoons')">Plan Munnar Trip ✈️</button>
+                            </div>
+                        </div>
+
+                        <!-- Tag Filter Bar -->
+                        <div class="inspiration-tags-section">
+                            <span class="tags-label">Filter by type:</span>
+                            <div class="inspiration-tags" id="inspirationTags">
+                                <button class="inspiration-tag active" onclick="filterInspiration('all')">✨ All</button>
+                                <button class="inspiration-tag" onclick="filterInspiration('beaches')">🏝️ Beaches</button>
+                                <button class="inspiration-tag" onclick="filterInspiration('mountains')">⛰️ Mountains</button>
+                                <button class="inspiration-tag" onclick="filterInspiration('heritage')">🕌 Heritage</button>
+                                <button class="inspiration-tag" onclick="filterInspiration('adventure')">🏂 Adventure</button>
+                            </div>
+                        </div>
+
+                        <!-- Inspiration Grid -->
+                        <div class="inspiration-grid" id="inspirationGrid">
+                            <!-- Curated destination cards will be dynamically injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS VIEW -->
+            <div class="view-panel" id="viewSettings">
+                <div class="settings-container-wrapper">
+                    <div class="settings-container">
+                        <div class="settings-header">
+                            <h3>⚙️ App Settings</h3>
+                            <p>Customize your profile details, configure travel planner preferences, and manage database storage.</p>
+                        </div>
+
+                        <!-- Settings Grid -->
+                        <div class="settings-grid">
+                            <!-- Column 1: Profile & Preferences -->
+                            <div class="settings-left-col">
+                                <!-- User Profile Card -->
+                                <div class="settings-section-card">
+                                    <h4>👤 Explorer Profile</h4>
+                                    <div class="settings-input-group">
+                                        <label for="settingsUsername">Your Name</label>
+                                        <input type="text" id="settingsUsername" placeholder="Explorer" value="Explorer">
+                                    </div>
+                                </div>
+
+                                <!-- Travel Preferences Card -->
+                                <div class="settings-section-card">
+                                    <h4>✈️ Planner Preferences</h4>
+                                    
+                                    <div class="settings-input-group">
+                                        <label for="settingsCurrency">Default Currency</label>
+                                        <select id="settingsCurrency">
+                                            <option value="₹">₹ (INR - Indian Rupee)</option>
+                                            <option value="$">$ (USD - US Dollar)</option>
+                                            <option value="€">€ (EUR - Euro)</option>
+                                            <option value="£">£ (GBP - British Pound)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="settings-input-group">
+                                        <label>Preferred Travel Pace</label>
+                                        <div class="settings-button-group" id="settingsPaceGroup">
+                                            <button class="preference-btn active" data-value="moderate" onclick="setSelectPreference('Pace', 'moderate')">Moderate</button>
+                                            <button class="preference-btn" data-value="slow" onclick="setSelectPreference('Pace', 'slow')">Slow & Relaxed</button>
+                                            <button class="preference-btn" data-value="fast" onclick="setSelectPreference('Pace', 'fast')">Fast & Packed</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="settings-input-group">
+                                        <label>Default Budget Tier</label>
+                                        <div class="settings-button-group" id="settingsBudgetGroup">
+                                            <button class="preference-btn" data-value="economy" onclick="setSelectPreference('Budget', 'economy')">Economy</button>
+                                            <button class="preference-btn active" data-value="moderate" onclick="setSelectPreference('Budget', 'moderate')">Standard</button>
+                                            <button class="preference-btn" data-value="luxury" onclick="setSelectPreference('Budget', 'luxury')">Luxury</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Column 2: Data Maintenance -->
+                            <div class="settings-right-col">
+                                <!-- Data Maintenance Card -->
+                                <div class="settings-section-card">
+                                    <h4>⚠️ System Maintenance</h4>
+                                    <p class="maintenance-desc">Manage your local storage data, clear runtime logs, or completely refresh the Travel Buddy app storage.</p>
+                                    
+                                    <div class="maintenance-actions">
+                                        <button class="btn-maintenance btn-warning" onclick="clearChatHistory()">
+                                            <span>💬</span> Clear Chat History
+                                        </button>
+                                        <p class="action-desc">Wipes all conversation messages from the Home view chat screen.</p>
+                                        
+                                        <button class="btn-maintenance btn-danger" onclick="wipeAllStorage()">
+                                            <span>🗑️</span> Reset App Storage
+                                        </button>
+                                        <p class="action-desc">Permanently deletes all saved trips, bookmarked favorites, and custom preferences. This action cannot be undone.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Actions -->
+                        <div class="settings-footer-actions">
+                            <button class="btn-save-settings" onclick="saveSettings()">
+                                <span>💾</span> Save App Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Wooden Sign Post Decoration -->
+    <div class="sign-post">
+        <div class="sign-arrow explore">Explore</div>
+        <div class="sign-arrow dream">Dream</div>
+        <div class="sign-arrow discover">Discover</div>
+        <div class="sign-pole"></div>
+    </div>
+
+    <!-- Saved Trip Details Modal -->
+    <div class="modal-overlay" id="tripDetailsModal">
+        <div class="modal-window">
+            <button class="modal-close-btn" onclick="closeTripDetails()">❌</button>
+            <div class="modal-body" id="modalTripContent">
+                <!-- Trip details render dynamically here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- Toast Alert Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+</body>
+
+</html>
