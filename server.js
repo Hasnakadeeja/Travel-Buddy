@@ -23,6 +23,32 @@ app.post("/chat", async (req, res) => {
         const userMessage =
         req.body.message;
 
+        // Gracefully handle simple greetings locally without overloading the LLM/Schema
+        const cleanMsg = userMessage.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").toLowerCase();
+        const greetings = ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening", "yo", "hello travel buddy", "hey travel buddy"];
+        
+        if (greetings.includes(cleanMsg)) {
+            const greetingResponse = {
+                intro: "👋 Hello! I'm Travel Buddy, your personal AI travel companion. Tell me where you'd like to go (e.g. *'Plan a 3-day trip to Munnar'* or *'Weekend beach getaway'*) and I will build a custom itinerary, budget breakdown, and local recommendations for you! ✈️",
+                destination: {
+                    name: "Your Next Destination",
+                    budget: {
+                        total: "0",
+                        days: 1,
+                        items: [],
+                        note: "Enter a destination to calculate budgets!"
+                    }
+                },
+                itinerary: [],
+                photographySpots: [],
+                foodRecommendations: [],
+                travelTips: []
+            };
+            return res.json({
+                reply: JSON.stringify(greetingResponse)
+            });
+        }
+
         const result = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: `
