@@ -16,6 +16,38 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
 });
 
+// Helper function to call Gemini with automatic retries for transient errors
+async function generateContentWithRetry(ai, options, maxRetries = 2, delayMs = 1500) {
+    let lastError;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await ai.models.generateContent(options);
+        } catch (error) {
+            lastError = error;
+            const status = error.status || (error.response && error.response.status);
+            const message = (error.message || "").toLowerCase();
+            
+            // Identify transient errors that are safe to retry:
+            // 429 (Rate Limit / Quota Exhausted), 503 (Service Unavailable), 500 (Internal Server Error)
+            // or error messages containing keywords like busy, overloaded, demand, limit.
+            const isTransient = !status || status === 429 || status >= 500 || 
+                                message.includes("demand") || message.includes("busy") || 
+                                message.includes("overloaded") || message.includes("resource exhausted") ||
+                                message.includes("rate limit") || message.includes("quota");
+                                
+            if (!isTransient || attempt === maxRetries) {
+                console.error(`Gemini API call failed permanently: ${error.message}`);
+                throw error;
+            }
+            
+            console.warn(`Gemini API call transient failure (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in ${delayMs}ms... Error: ${error.message}`);
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+            delayMs *= 2; // Exponential backoff
+        }
+    }
+    throw lastError;
+}
+
 app.post("/chat", async (req, res) => {
 
     try {
@@ -49,7 +81,7 @@ app.post("/chat", async (req, res) => {
             });
         }
 
-        const result = await ai.models.generateContent({
+        const result = await generateContentWithRetry(ai, {
             model: "gemini-2.5-flash",
             contents: `
                 You are Travel Buddy AI, a helpful and friendly travel companion.

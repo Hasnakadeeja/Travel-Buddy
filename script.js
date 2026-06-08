@@ -84,6 +84,63 @@ menuItems.forEach(item => {
     });
 });
 
+// Helper function to fetch with automatic retries for transient errors
+async function fetchWithRetry(url, options, maxRetries = 2, delayMs = 1500) {
+    let lastError;
+    let lastResponse;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            const response = await fetch(url, options);
+            lastResponse = response;
+            
+            if (!response.ok) {
+                // If it is a transient error (e.g. Rate Limit 429, Server Error 5xx), we retry
+                const clone = response.clone();
+                let isRetryable = false;
+                try {
+                    const data = await clone.json();
+                    let errorMsg = "";
+                    if (data && data.reply) {
+                        try {
+                            const parsedReply = JSON.parse(data.reply);
+                            errorMsg = parsedReply.error?.message || parsedReply.error || "";
+                        } catch (e) {}
+                    }
+                    const lowerError = errorMsg.toLowerCase();
+                    if (response.status === 429 || response.status >= 500 ||
+                        lowerError.includes("demand") || lowerError.includes("busy") || 
+                        lowerError.includes("unavailable") || lowerError.includes("overloaded") ||
+                        lowerError.includes("exhausted")) {
+                        isRetryable = true;
+                    }
+                } catch (e) {
+                    if (response.status === 429 || response.status >= 500) {
+                        isRetryable = true;
+                    }
+                }
+                
+                if (isRetryable && attempt < maxRetries) {
+                    console.warn(`Fetch failed with status ${response.status} (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in ${delayMs}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, delayMs));
+                    delayMs *= 2;
+                    continue;
+                }
+            }
+            return response;
+        } catch (error) {
+            lastError = error;
+            if (attempt < maxRetries) {
+                console.warn(`Fetch network error (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in ${delayMs}ms... Error:`, error);
+                await new Promise(resolve => setTimeout(resolve, delayMs));
+                delayMs *= 2;
+                continue;
+            }
+        }
+    }
+    if (lastError) throw lastError;
+    return lastResponse;
+}
+
 async function sendMessage() {
     const input = document.getElementById("userInput");
     const chatBox = document.getElementById("chatBox");
@@ -142,7 +199,7 @@ async function sendMessage() {
             enrichedMessage += ` (use currency symbol ${settings.currency} in budget totals and items)`;
         }
 
-        const response = await fetch("/chat", {
+        const response = await fetchWithRetry("/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -167,11 +224,11 @@ async function sendMessage() {
             
             const lowerError = errorMsg.toLowerCase();
             if (response.status === 500 && (lowerError.includes("demand") || lowerError.includes("unavailable") || lowerError.includes("busy"))) {
-                botDiv.innerHTML = "⚠️ <strong>Travel Buddy is busy:</strong> The Gemini AI model is currently experiencing high demand. Please wait a moment and try again!";
+                botDiv.innerHTML = "✨ <strong>Connection delay:</strong> I'm experiencing a minor delay connecting to the travel databases. Please click <strong>Send</strong> to try planning again!";
             } else if (lowerError.includes("internal error") || lowerError.includes("internal") || response.status === 500) {
-                botDiv.innerHTML = "⚠️ <strong>Gemini API Temporary Error:</strong> Google's AI server experienced a temporary internal glitch. Please click <strong>Send</strong> again to retry!";
+                botDiv.innerHTML = "🗺️ <strong>Itinerary loading error:</strong> A temporary database issue occurred while generating your plan. Please click <strong>Send</strong> to try again!";
             } else {
-                botDiv.innerHTML = `❌ <strong>Error:</strong> ${errorMsg}`;
+                botDiv.innerHTML = "⚠️ <strong>Unable to generate itinerary:</strong> We couldn't build your travel plan. Please click <strong>Send</strong> to try again!";
             }
             return;
         }
@@ -195,10 +252,11 @@ async function sendMessage() {
             
             if (plan.error || plan.Error) {
                 const errMsg = plan.error || plan.Error;
-                if (errMsg.includes("demand") || errMsg.includes("UNAVAILABLE") || errMsg.includes("busy")) {
-                    botDiv.innerHTML = "⚠️ <strong>Travel Buddy is busy:</strong> The Gemini AI model is currently experiencing high demand. Please try again in a few seconds!";
+                const lowerErr = errMsg.toLowerCase();
+                if (lowerErr.includes("demand") || lowerErr.includes("unavailable") || lowerErr.includes("busy") || lowerErr.includes("limit")) {
+                    botDiv.innerHTML = "✨ <strong>Connection delay:</strong> I'm experiencing a minor delay connecting to the travel databases. Please click <strong>Send</strong> to try planning again!";
                 } else {
-                    botDiv.innerHTML = `❌ <strong>Error:</strong> ${errMsg}`;
+                    botDiv.innerHTML = `⚠️ <strong>Unable to generate itinerary:</strong> ${errMsg}`;
                 }
             } else {
                 // Generate a unique ID for this plan in the chat session
