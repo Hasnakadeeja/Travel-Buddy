@@ -142,7 +142,7 @@ async function sendMessage() {
             enrichedMessage += ` (use currency symbol ${settings.currency} in budget totals and items)`;
         }
 
-        const response = await fetch("http://localhost:3000/chat", {
+        const response = await fetch("/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
