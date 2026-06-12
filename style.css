@@ -2827,3 +2827,577 @@ body.dark-theme .toast-alert {
     border-color: #475569;
     color: #f8fafc;
 }
+
+/* ==========================================
+   MOBILE RESPONSIVENESS AND TOGGLE CONTROLS
+   ========================================== */
+
+/* Hidden on desktop */
+.sidebar-toggle-btn {
+    display: none;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+    /* Main Layout */
+    body {
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    .container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+        max-width: 100%;
+        box-shadow: none;
+    }
+    
+    /* Off-Canvas Sidebar Drawer */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 10000;
+        width: 280px;
+        height: 100vh;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-right: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 15px 0 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    body.dark-theme .sidebar {
+        border-right: 1px solid #1e293b;
+        box-shadow: 15px 0 30px rgba(0, 0, 0, 0.45);
+    }
+    
+    /* Desktop Decorations - Hidden on Mobile */
+    .sign-post,
+    .decorations {
+        display: none !important;
+    }
+    
+    /* Mobile Header Navigation Row */
+    .sidebar-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.85);
+        border: none;
+        outline: none;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+        color: #334155;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.25s ease;
+        flex-shrink: 0;
+    }
+    
+    .sidebar-toggle-btn:hover {
+        background: #ffffff;
+        transform: scale(1.05);
+    }
+    
+    body.dark-theme .sidebar-toggle-btn {
+        background: rgba(30, 41, 59, 0.85);
+        color: #f8fafc;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+    
+    body.dark-theme .sidebar-toggle-btn:hover {
+        background: #1e293b;
+    }
+    
+    .header-row {
+        padding: 15px 20px 5px 20px;
+        gap: 12px;
+    }
+    
+    .hero {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .hero h1 {
+        font-size: 22px;
+        margin-bottom: 2px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    
+    .hero p {
+        font-size: 12.5px;
+    }
+    
+    .header-actions {
+        gap: 10px;
+    }
+    
+    .theme-toggle {
+        padding: 8px 12px;
+        font-size: 12px;
+        border-radius: 20px;
+    }
+    
+    .profile-container {
+        width: 38px;
+        height: 38px;
+    }
+    
+    /* Home View (Chat Panel) */
+    .chat-container-wrapper {
+        margin: 10px 15px;
+        border-radius: 18px;
+    }
+    
+    .chat-box {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .message-wrapper {
+        max-width: 92%;
+        gap: 8px;
+    }
+    
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .bot-message {
+        padding: 15px;
+        border-radius: 16px;
+        font-size: 13.5px;
+    }
+    
+    .user-message {
+        padding: 10px 16px;
+        border-radius: 16px 16px 4px 16px;
+        font-size: 13.5px;
+    }
+    
+    /* Dynamic Chat Content Grid Columns */
+    .itinerary-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .bot-card {
+        padding: 12px 15px;
+        border-radius: 12px;
+    }
+    
+    .bot-card h4 {
+        font-size: 13.5px;
+    }
+    
+    .bot-card .subtitle {
+        font-size: 10px;
+        margin-bottom: 8px;
+    }
+    
+    .card-list li {
+        font-size: 12px;
+    }
+    
+    .bottom-pills-container {
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    .bottom-pill-card {
+        padding: 12px 15px;
+        gap: 10px;
+        border-radius: 12px;
+    }
+    
+    .bottom-pill-card .pill-icon-container {
+        font-size: 18px;
+    }
+    
+    .bottom-pill-card h5 {
+        font-size: 12.5px;
+    }
+    
+    .bottom-pill-card p {
+        font-size: 12px;
+    }
+    
+    /* Chat Inputs */
+    .input-area {
+        padding: 10px 15px 15px 15px;
+    }
+    
+    .input-container {
+        padding: 5px 8px 5px 15px;
+        border-radius: 30px;
+    }
+    
+    .plane-input-icon {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+    
+    .input-container input {
+        font-size: 14px;
+        padding: 6px 0;
+    }
+    
+    .attachment-btn {
+        font-size: 16px;
+        padding: 0 8px;
+    }
+    
+    .send-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+        border-radius: 20px;
+    }
+    
+    .send-icon {
+        font-size: 11px;
+    }
+    
+    /* Inner Views Container Padding (SPA Pages) */
+    .trips-container-wrapper,
+    .favorites-container-wrapper,
+    .budget-container-wrapper,
+    .inspiration-container-wrapper,
+    .settings-container-wrapper {
+        padding: 15px 15px 30px 15px;
+    }
+    
+    .trips-header,
+    .favorites-header,
+    .budget-header,
+    .inspiration-header,
+    .settings-header {
+        margin-bottom: 15px;
+    }
+    
+    .trips-header h3,
+    .favorites-header h3,
+    .budget-header h3,
+    .inspiration-header h3,
+    .settings-header h3 {
+        font-size: 19px;
+    }
+    
+    .trips-header p,
+    .favorites-header p,
+    .budget-header p,
+    .inspiration-header p,
+    .settings-header p {
+        font-size: 13px;
+    }
+    
+    /* My Trips View */
+    .trips-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .trip-card {
+        padding: 18px;
+        border-radius: 16px;
+    }
+    
+    .trip-card-destination {
+        font-size: 15px;
+    }
+    
+    /* Favorites View */
+    .favorites-categories {
+        gap: 20px;
+    }
+    
+    .fav-section {
+        padding: 15px;
+        border-radius: 16px;
+    }
+    
+    .fav-section h4 {
+        font-size: 14.5px;
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+    }
+    
+    .fav-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .fav-card {
+        padding: 12px 15px;
+        border-radius: 12px;
+    }
+    
+    .fav-card-title {
+        font-size: 13.5px;
+    }
+    
+    .fav-card-details {
+        font-size: 12px;
+    }
+    
+    /* Budget Planner View */
+    .budget-selector-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px 18px;
+        border-radius: 14px;
+        margin-bottom: 18px;
+    }
+    
+    .budget-selector-section select {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 13.5px;
+    }
+    
+    .budget-metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+    
+    .metric-card {
+        padding: 12px 18px;
+        gap: 15px;
+        border-radius: 16px;
+    }
+    
+    .metric-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+        border-radius: 12px;
+    }
+    
+    .metric-value {
+        font-size: 17px;
+    }
+    
+    .breakdown-chart-card,
+    .breakdown-advice-card {
+        padding: 15px;
+        border-radius: 16px;
+    }
+    
+    .breakdown-chart-card h4,
+    .breakdown-advice-card h4 {
+        font-size: 14.5px;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+    }
+    
+    .budget-bar-labels {
+        font-size: 12px;
+    }
+    
+    .budget-bar-labels .category-meta {
+        font-size: 11px;
+    }
+    
+    .advice-content {
+        gap: 10px;
+    }
+    
+    .advice-item {
+        padding: 12px;
+        border-radius: 12px;
+        gap: 10px;
+    }
+    
+    .advice-icon {
+        font-size: 16px;
+    }
+    
+    .advice-text {
+        font-size: 12px;
+    }
+    
+    .advice-text strong {
+        font-size: 12.5px;
+    }
+    
+    /* Inspiration View */
+    .inspiration-spotlight {
+        padding: 20px;
+        border-radius: 18px;
+        margin-bottom: 20px;
+    }
+    
+    .inspiration-spotlight h2 {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+    
+    .inspiration-spotlight p {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+    
+    .btn-spotlight {
+        padding: 10px 20px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+    
+    .inspiration-tags-section {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .tags-label {
+        font-size: 13px;
+        width: 100%;
+    }
+    
+    .inspiration-tag {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .inspiration-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .inspiration-card {
+        border-radius: 18px;
+    }
+    
+    .card-image-wrapper {
+        height: 150px;
+    }
+    
+    .inspiration-card-content {
+        padding: 15px;
+    }
+    
+    .inspiration-card-content h4 {
+        font-size: 15px;
+    }
+    
+    .inspiration-card-content p {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .btn-card-plan {
+        padding: 8px 12px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+    
+    /* Settings View */
+    .settings-grid {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .settings-section-card {
+        padding: 18px;
+        border-radius: 16px;
+    }
+    
+    .settings-section-card h4 {
+        font-size: 14.5px;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+    }
+    
+    .settings-input-group {
+        margin-bottom: 15px;
+    }
+    
+    .settings-input-group label {
+        font-size: 12.5px;
+    }
+    
+    .settings-input-group input[type="text"],
+    .settings-input-group select {
+        font-size: 13.5px;
+        padding: 9px 12px;
+        border-radius: 10px;
+    }
+    
+    .preference-btn {
+        font-size: 12.5px;
+        padding: 8px 14px;
+        border-radius: 10px;
+    }
+    
+    .btn-maintenance {
+        font-size: 13px;
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+    
+    .btn-save-settings {
+        width: 100%;
+        justify-content: center;
+        font-size: 14px;
+        padding: 12px 24px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(29, 78, 216, 0.25);
+    }
+    
+    /* Modal Popups */
+    .modal-overlay {
+        padding: 10px;
+    }
+    
+    .modal-window {
+        width: 96%;
+        height: 85vh;
+        border-radius: 20px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-close-btn {
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+}

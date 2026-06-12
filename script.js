@@ -14,9 +14,30 @@ if (themeToggleBtn) {
     });
 }
 
-// Sidebar Interactive Navigation (Aesthetic active menu switching & SPA View Swapping)
+// Sidebar & Mobile Navigation Controls
 const menuItems = document.querySelectorAll(".menu-item");
 const viewPanels = document.querySelectorAll(".view-panel");
+const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+const sidebar = document.querySelector(".sidebar");
+
+if (sidebarToggleBtn) {
+    sidebarToggleBtn.addEventListener("click", () => {
+        if (sidebar) sidebar.classList.toggle("open");
+        if (sidebarOverlay) sidebarOverlay.classList.toggle("active");
+    });
+}
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener("click", () => {
+        closeMobileSidebar();
+    });
+}
+
+function closeMobileSidebar() {
+    if (sidebar) sidebar.classList.remove("open");
+    if (sidebarOverlay) sidebarOverlay.classList.remove("active");
+}
 
 function switchView(viewName) {
     let viewId = viewName;
@@ -53,6 +74,9 @@ function switchView(viewName) {
     if (menuItem) {
         menuItem.classList.add("active");
     }
+    
+    // Close sidebar on mobile navigation
+    closeMobileSidebar();
     
     // If favorites, trips, budget, or inspiration view is loaded, render contents dynamically
     if (viewId === "viewFavorites") {
